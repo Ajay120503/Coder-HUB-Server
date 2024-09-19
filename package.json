@@ -4,7 +4,7 @@
   "description": "welcome in coder Hub.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ajay Kandhare",
@@ -12,6 +12,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.0",
+    "node-fetch": "^3.3.2",
     "nodemon": "^3.1.4",
     "socket.io": "^4.7.5",
     "soket.io": "^0.0.1-security"

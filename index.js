@@ -32,10 +32,10 @@ const getAllConnectedClients = (roomId) => {
 };
 
 io.on("connection", (socket) => {
-    console.log(`User connected: ${socket.id}`);
+    //console.log(`User connected: ${socket.id}`);
 
     socket.on('join', ({ roomId, username }) => {
-        console.log(`User ${username} joining room ${roomId} with socket ID ${socket.id}`);
+        //console.log(`User ${username} joining room ${roomId} with socket ID ${socket.id}`);
 
         // Update maps
         userSocketMap[socket.id] = username;
@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
 
         // Get the updated list of clients in the room
         const clients = getAllConnectedClients(roomId);
-        console.log('Clients in room:', clients);
+        //console.log('Clients in room:', clients);
 
         // Notify all clients in the room about the new user
         io.to(roomId).emit('updateMembers', {

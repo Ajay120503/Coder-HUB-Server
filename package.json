@@ -4,7 +4,7 @@
   "description": "welcome in coder Hub.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "nodem index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ajay Kandhare",

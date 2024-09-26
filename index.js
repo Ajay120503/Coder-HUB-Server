@@ -27,7 +27,8 @@ const getAllConnectedClients = (roomId) => {
     const room = io.sockets.adapter.rooms.get(roomId) || [];
     return Array.from(room).map(socketId => ({
         socketId,
-        username: userSocketMap[socketId],
+        username: userSocketMap[socketId].username,
+        joinedAt: userSocketMap[socketId].joinedAt, // Include timestamp
     }));
 };
 
@@ -36,9 +37,9 @@ io.on("connection", (socket) => {
 
     socket.on('join', ({ roomId, username }) => {
         //console.log(`User ${username} joining room ${roomId} with socket ID ${socket.id}`);
-
+        const joinedAt = new Date().toISOString();
         // Update maps
-        userSocketMap[socket.id] = username;
+        userSocketMap[socket.id] = { username, joinedAt };
         userRoomMap[username] = roomId;
 
         socket.join(roomId);
@@ -50,13 +51,14 @@ io.on("connection", (socket) => {
         // Notify all clients in the room about the new user
         io.to(roomId).emit('updateMembers', {
             clients,
-            joinedUser: { socketId: socket.id, username }
+            joinedUser: { socketId: socket.id, username, joinedAt }
         });
 
         // Send current editor state to the new user
         const roomCode = roomCodeMap[roomId] || "";
         const roomLanguage = roomLanguageMap[roomId] || "javascript";
         socket.emit('editorUpdate', { value: roomCode, language: roomLanguage });
+
     });
 
     socket.on('editorChange', ({ roomId, value }) => {
@@ -71,8 +73,8 @@ io.on("connection", (socket) => {
 
     // Use 'disconnect' to handle cleanup and notifications
     socket.on('disconnect', () => {
-        const roomId = userRoomMap[userSocketMap[socket.id]];
-        const username = userSocketMap[socket.id];
+        const roomId = userRoomMap[userSocketMap[socket.id]?.username];
+        const username = userSocketMap[socket.id]?.username;
 
         if (roomId && username) {
             // Remove user from maps
